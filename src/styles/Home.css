@@ -1,0 +1,207 @@
+.welcome h1 {
+    margin: 0 0 6px;
+    font-size: 28px;
+    letter-spacing: -0.8px;
+}
+
+.welcome p,
+.create-copy p {
+    color: #66717e;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.create-panel {
+    margin-top: 24px;
+    padding: 24px;
+    background: white;
+    border: 1px solid #e0e5eb;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.create-copy {
+    flex: 1;
+    min-width: 180px;
+}
+
+.create-copy h2 {
+    font-size: 18px;
+    margin: 0 0 8px;
+}
+
+.source-options {
+    display: flex;
+    gap: 10px;
+}
+
+.source-card {
+    width: 112px;
+    height: 92px;
+    padding: 13px;
+    border: 0;
+    border-radius: 13px;
+    background: #e9eefb;
+    color: #263243;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-weight: 650;
+    font-size: 12px;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+}
+
+.source-card:hover {
+    transform: translateY(-2px);
+}
+
+.source-card.selected {
+    background: #3158d4;
+    color: white;
+}
+
+.source-icon {
+    font-size: 22px;
+    line-height: 1;
+    color: #3158d4;
+}
+
+.source-card.selected .source-icon {
+    color: white;
+}
+
+.recent-section {
+    margin-top: 24px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.section-heading h2 {
+    font-size: 16px;
+    margin: 0;
+}
+
+.see-all {
+    border: 0;
+    padding: 4px 0;
+    background: transparent;
+    color: #3158d4;
+    text-decoration: underline;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.study-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.study-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+    background: white;
+    border: 1px solid #dfe4eb;
+    border-radius: 13px;
+    text-align: left;
+    color: #17212d;
+    font: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.study-card:hover {
+    border-color: #b9c9f5;
+    box-shadow: 0 3px 12px rgb(23 33 45 / 6%);
+}
+
+.category {
+    display: block;
+    color: #4165bf;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: 0.3px;
+    margin: 0 0 2px;
+}
+
+.study-title {
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.4;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag {
+    background: #f0f2f5;
+    color: #4f5966;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.source {
+    display: block;
+    color: #697481;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+@media (max-width: 850px) {
+    .create-panel {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .source-options {
+        width: 100%;
+    }
+
+    .source-card {
+        flex: 1;
+        width: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .welcome h1 {
+        font-size: 24px;
+    }
+
+    .create-panel {
+        padding: 16px;
+    }
+
+    .source-options {
+        gap: 6px;
+    }
+
+    .source-card {
+        height: 82px;
+        padding: 10px;
+    }
+
+    .study-grid {
+        grid-template-columns: 1fr;
+    }
+}

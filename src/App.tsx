@@ -1,123 +1,240 @@
 
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
-const studySets = [
+import Home from './pages/Home';
+import AddNotes from './pages/AddNotes';
+import ReviewContent from './pages/ReviewContent';
+import StudySetSummary from './pages/StudySetSummary';
+import StudySets, { type StudySet } from './pages/StudySets';
+import Flashcards from './pages/Flashcards';
+import Quiz from './pages/Quiz';
+import QuizResults from './pages/QuizResults';
+
+import Sidebar from './components/Sidebar';
+import Layout from './components/Layout';
+import type { Source } from './data/studyData';
+
+type Page =
+  | 'home'
+  | 'add-notes'
+  | 'review-content'
+  | 'study-set-summary'
+  | 'study-sets'
+  | 'flashcards'
+  | 'quiz'
+  | 'quiz-results';
+
+const initialStudySets: StudySet[] = [
   {
-    category: 'DATABASE SYSTEMS · WEEK 6',
-    title: 'Normalization (1NF–3NF)',
-    tags: ['10 questions', '20 cards', 'Summary'],
-    source: 'From D2L · studied today',
+    id: 'database-normalization',
+    title: 'Database Normalization',
+    description:
+      'Review database normalization concepts, functional dependencies, and normal forms.',
+    flashcards: 10,
+    questions: 5,
+    createdAt: 'Sample study set',
   },
-  {
-    category: 'WEB DEVELOPMENT · WEEK 4',
-    title: 'HTTP methods & REST',
-    tags: ['8 questions', '15 cards'],
-    source: 'From web page · 2 days ago',
-  },
-  {
-    category: 'PROJECT MANAGEMENT · WEEK 3',
-    title: 'Scrum roles & ceremonies',
-    tags: ['12 cards', 'Summary'],
-    source: 'From PDF · last week',
-  },
-]
+];
 
 function App() {
+  const [page, setPage] = useState<Page>('home');
+  const [source, setSource] = useState<Source>('d2l');
+  const [course, setCourse] = useState('Database Systems');
+
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([
+    'week6-slides',
+    'week6-labs',
+  ]);
+
+  const [url, setUrl] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+  const [message, setMessage] = useState('');
+  const [studySets] = useState<StudySet[]>(initialStudySets);
+  const [activeStudySetId, setActiveStudySetId] = useState(
+    'database-normalization',
+  );
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizTotal, setQuizTotal] = useState(5);
+
+  function openAddNotes(nextSource: Source = 'd2l') {
+    setSource(nextSource);
+    setMessage('');
+    setPage('add-notes');
+  }
+
+  function toggleMaterial(id: string) {
+    setSelectedMaterials((current) =>
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : [...current, id],
+    );
+    setMessage('');
+  }
+
+  function handleExtract() {
+    if (source === 'd2l' && selectedMaterials.length === 0) {
+      setMessage('Select at least one course item to continue.');
+      return;
+    }
+
+    if (source === 'web') {
+      try {
+        const parsed = new URL(url);
+        if (!['http:', 'https:'].includes(parsed.protocol)) {
+          throw new Error('Invalid protocol');
+        }
+      } catch {
+        setMessage('Enter a valid web address, such as https://example.com.');
+        return;
+      }
+    }
+
+    if (source === 'file' && !file) {
+      setMessage('Choose a file before continuing.');
+      return;
+    }
+
+    setMessage('');
+    setPage('review-content');
+  }
+
+  function handleQuizFinish(score: number, total: number) {
+    setQuizScore(score);
+    setQuizTotal(total);
+    setMessage('');
+    setPage('quiz-results');
+  }
+
+  function openStudySet(id: string) {
+    setActiveStudySetId(id);
+    setMessage('');
+    setPage('study-set-summary');
+  }
+
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <div className="logo">ES</div>
+      <Sidebar
+        page={
+          page === 'home' || page === 'add-notes'
+            ? page
+            : 'home'
+        }
+        onNavigate={(nextPage) => {
+          setPage(nextPage);
+          setMessage('');
+        }}
+        onOpenStudySets={() => {
+          setMessage('');
+          setPage('study-sets');
+        }}
+        onOpenProfile={() =>
+          setMessage('Profile settings will be added in a later step.')
+        }
+      />
 
-        <button className="nav-button active" aria-label="Home">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
-          </svg>
-        </button>
+      <Layout>
+        {page === 'home' ? (
+          <Home
+            onAddNotes={openAddNotes}
+            onOpenStudySet={openStudySet}
+          />
+        ) : page === 'add-notes' ? (
+          <AddNotes
+            source={source}
+            setSource={(nextSource) => {
+              setSource(nextSource);
+              setMessage('');
+            }}
+            course={course}
+            setCourse={setCourse}
+            selectedMaterials={selectedMaterials}
+            toggleMaterial={toggleMaterial}
+            url={url}
+            setUrl={setUrl}
+            file={file}
+            setFile={setFile}
+            onCancel={() => {
+              setPage('home');
+              setMessage('');
+            }}
+            onExtract={handleExtract}
+            message={message}
+          />
+        ) : page === 'review-content' ? (
+          <ReviewContent
+            onBack={() => {
+              setPage('add-notes');
+              setMessage('');
+            }}
+            onContinue={(content) => {
+              console.log('Reviewed content length:', content.length);
+              setMessage('');
+              setPage('study-set-summary');
+            }}
+          />
+        ) : page === 'study-set-summary' ? (
+          <StudySetSummary
+            onBack={() => {
+              setPage('review-content');
+              setMessage('');
+            }}
+            onOpenFlashcards={() => {
+              setMessage('');
+              setPage('flashcards');
+            }}
+            onStartQuiz={() => {
+              setMessage('');
+              setPage('quiz');
+            }}
+          />
+        ) : page === 'study-sets' ? (
+          <StudySets
+            studySets={studySets}
+            onOpenStudySet={openStudySet}
+          />
+        ) : page === 'flashcards' ? (
+          <Flashcards
+            onBack={() => {
+              setPage('study-set-summary');
+              setMessage('');
+            }}
+            onStartQuiz={() => {
+              setMessage('');
+              setPage('quiz');
+            }}
+          />
+        ) : page === 'quiz' ? (
+          <Quiz
+            onBack={() => {
+              setPage('study-set-summary');
+              setMessage('');
+            }}
+            onFinish={handleQuizFinish}
+          />
+        ) : (
+          <QuizResults
+            score={quizScore}
+            total={quizTotal}
+            onTryAgain={() => {
+              setMessage('');
+              setPage('quiz');
+            }}
+            onBack={() => {
+              setMessage('');
+              setPage('study-set-summary');
+            }}
+          />
+        )}
 
-        <button className="nav-button" aria-label="Add notes">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-        </button>
-
-        <button className="nav-button" aria-label="Study sets">
-          <svg viewBox="0 0 24 24" fill="none">
-            <rect x="4" y="4" width="6" height="16" rx="1" />
-            <rect x="14" y="4" width="6" height="16" rx="1" />
-          </svg>
-        </button>
-
-        <div className="sidebar-bottom">
-          <button className="profile-button" aria-label="Profile">
-            <svg viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 21a8 8 0 0 1 16 0" />
-            </svg>
-          </button>
-        </div>
-      </aside>
-
-      <main className="main-content">
-        <header className="welcome">
-          <h1>Welcome back</h1>
-          <p>Pick up where you left off, or turn new notes into practice.</p>
-        </header>
-
-        <section className="create-panel">
-          <div className="create-copy">
-            <h2>Turn your class notes into practice</h2>
-            <p>
-              Bring in notes from D2L, a web page or a file. EasyStudyAI
-              builds a quiz, flashcards and a summary from them.
-            </p>
+        {page === 'home' && message && (
+          <div className="status-message" role="status">
+            {message}
           </div>
-
-          <div className="source-options">
-            <button className="source-card selected" onClick={() => alert('D2L import will be added later.')}>
-              <span className="source-icon">♧</span>
-              <span>From D2L</span>
-            </button>
-
-            <button className="source-card" onClick={() => alert('Web page import will be added later.')}>
-              <span className="source-icon">↗</span>
-              <span>Web page</span>
-            </button>
-
-            <button className="source-card" onClick={() => alert('File upload will be added later.')}>
-              <span className="source-icon">↑</span>
-              <span>Upload file</span>
-            </button>
-          </div>
-        </section>
-
-        <section className="recent-section">
-          <div className="section-heading">
-            <h2>Recent study sets</h2>
-            <button className="see-all" onClick={() => alert('All study sets will be added later.')}>
-              See all
-            </button>
-          </div>
-
-          <div className="study-grid">
-            {studySets.map((set) => (
-              <article className="study-card" key={set.title}>
-                <p className="category">{set.category}</p>
-                <h3>{set.title}</h3>
-
-                <div className="tags">
-                  {set.tags.map((tag) => (
-                    <span className="tag" key={tag}>{tag}</span>
-                  ))}
-                </div>
-
-                <p className="source">{set.source}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-      </main>
+        )}
+      </Layout>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

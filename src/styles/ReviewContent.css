@@ -1,0 +1,118 @@
+.review-page {
+    width: 100%;
+}
+
+.review-page .page-header {
+    margin-bottom: 24px;
+}
+
+.review-panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.review-panel-heading h2 {
+    margin: 0 0 8px;
+    font-size: 17px;
+}
+
+.review-panel-heading p {
+    margin: 0;
+    color: #66717e;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.review-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.review-textarea {
+    display: block;
+    width: 100%;
+    min-height: 380px;
+    padding: 16px;
+    border: 1px solid #d5dce6;
+    border-radius: 9px;
+    background: #fff;
+    color: #17212d;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.7;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.review-textarea:focus {
+    outline: 2px solid #3158d4;
+    outline-offset: 2px;
+}
+
+.review-page .notes-panel {
+    width: 100%;
+}
+
+.review-page .helper-text {
+    margin-top: 18px;
+    color: #697481;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.review-page .page-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.review-page .cancel-button,
+.review-page .primary-button {
+    padding: 11px 17px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.review-page .cancel-button {
+    border: 1px solid #d5dce6;
+    background: #fff;
+    color: #344054;
+}
+
+.review-page .primary-button {
+    border: 1px solid #3158d4;
+    background: #3158d4;
+    color: #fff;
+}
+
+.review-page .primary-button:hover {
+    background: #2547b6;
+}
+
+.review-page .primary-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .review-panel-heading {
+        flex-direction: column;
+    }
+
+    .review-textarea {
+        min-height: 320px;
+    }
+
+    .review-page .page-actions {
+        flex-wrap: wrap;
+    }
+}

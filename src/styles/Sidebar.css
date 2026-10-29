@@ -1,0 +1,64 @@
+.sidebar {
+    width: 64px;
+    flex-shrink: 0;
+    background: #14202c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 0;
+    box-sizing: border-box;
+}
+
+.logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #3158d4;
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.nav-button,
+.profile-button {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #aeb9c7;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+.nav-button.active,
+.nav-button:hover,
+.profile-button:hover {
+    background: #304052;
+    color: white;
+}
+
+.nav-button svg,
+.profile-button svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+@media (max-width: 600px) {
+    .sidebar {
+        width: 54px;
+    }
+}
